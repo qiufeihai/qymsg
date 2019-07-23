@@ -11,7 +11,8 @@ class QyMsg {
     this.onlyOneKey = Object.keys(this.keys).length == 1;
     this.keys.defaultGroup = this.keys[Object.keys(this.keys)[0]];
     this.baseURL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=';
-    this.log = options.log
+    this.log = options.log;
+    this.isProduction = isProduction;
 
     axios.interceptors.request.use(function (config) {
       if (options.log) console.log('config->', config)
@@ -32,7 +33,7 @@ class QyMsg {
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
 
-    if (!isProduction) {
+    if (!this.isProduction) {
       console.log(`[qymsg] 非生产模式：`, content)
     } else {
       await axios.post(this.baseURL + this.keys[groupName], {
@@ -54,7 +55,7 @@ class QyMsg {
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
 
-    if (!isProduction) {
+    if (!this.isProduction) {
       console.log(`[qymsg] 非生产模式：`, content)
     } else {
       await axios.post(this.baseURL + this.keys[groupName], {
@@ -76,7 +77,7 @@ class QyMsg {
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
 
-    if (!isProduction) {
+    if (!this.isProduction) {
       console.log(`[qymsg] 非生产模式：`, content)
     } else {
       await axios.post(this.baseURL + this.keys[groupName], {
