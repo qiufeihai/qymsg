@@ -2,9 +2,9 @@ const axios = require('axios');
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 class QyMsg {
-  constructor(options) {
+  constructor(options, isProduction) {
     if (typeof options == 'string') {
-      this.key = options
+      let key = options
       options = { keys: { defaultGroup: key } }
     }
     this.keys = options.keys || {};
@@ -32,13 +32,17 @@ class QyMsg {
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
 
-    await axios.post(this.baseURL + this.keys[groupName], {
-      msgtype: 'text',
-      text: {
-        content,
-        mentioned_mobile_list: users
-      }
-    })    
+    if (!isProduction) {
+      console.log(`[qymsg] 非生产模式：`, content)
+    } else {
+      await axios.post(this.baseURL + this.keys[groupName], {
+        msgtype: 'text',
+        text: {
+          content,
+          mentioned_mobile_list: users
+        }
+      })    
+    }
   }
 
   async pushToAll(groupName, content) {
@@ -49,13 +53,18 @@ class QyMsg {
       throw new Error('缺少groupName参数');
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
-    await axios.post(this.baseURL + this.keys[groupName], {
-      msgtype: 'text',
-      text: {
-        content,
-        mentioned_mobile_list: ['@all']
-      }
-    })    
+
+    if (!isProduction) {
+      console.log(`[qymsg] 非生产模式：`, content)
+    } else {
+      await axios.post(this.baseURL + this.keys[groupName], {
+        msgtype: 'text',
+        text: {
+          content,
+          mentioned_mobile_list: ['@all']
+        }
+      })    
+    }
   }
 
   async markdown(groupName, content) {
@@ -67,12 +76,16 @@ class QyMsg {
     }
     if (!this.keys[groupName]) throw new Error(`缺少${groupName}的key`);
 
-    await axios.post(this.baseURL + this.keys[groupName], {
-      msgtype: 'markdown',
-      markdown: {
-        content
-      }
-    })    
+    if (!isProduction) {
+      console.log(`[qymsg] 非生产模式：`, content)
+    } else {
+      await axios.post(this.baseURL + this.keys[groupName], {
+        msgtype: 'markdown',
+        markdown: {
+          content
+        }
+      })    
+    }
   }
 }
 

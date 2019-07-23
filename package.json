@@ -1,6 +1,6 @@
 {
   "name": "qymsg",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "企业微信消息机器人",
   "main": "index.js",
   "scripts": {
